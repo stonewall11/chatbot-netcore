@@ -33,15 +33,16 @@ namespace Chatbot.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(TwilioSmsRequest request)
         {
-            var randomeResponse = new List<string>(new string[] {
+            var randomResponse = new List<string>(new string[] {
              "Hi, you are trying to message a chat bot, are you excited about it?",
              "Hi, how do you like our chat bot?",
              "Hi, i'm so happy to text you back :)"
             });
 
             var message = await _aiService.ConverseAsync(request.Body, GetContextAsync).ConfigureAwait(false);
+                
             if (string.IsNullOrWhiteSpace(message))
-                message = randomeResponse.Shuffle().First();
+                message = randomResponse.Shuffle().First();
 
             await _smsService.SendSmsAsync(request.From, message).ConfigureAwait(false);
             return Ok();
